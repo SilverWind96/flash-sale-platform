@@ -27,6 +27,8 @@ Run the app:
 mvn spring-boot:run
 ```
 
+Application logs appear in this terminal. `docker compose logs` only shows PostgreSQL and Redis because the app is not containerized yet.
+
 Run tests:
 
 ```bash

@@ -28,3 +28,16 @@ management:
     health:
       probes:
         enabled: true
+
+flashsale:
+  logging:
+    requests:
+      enabled: true
+
+logging:
+  level:
+    com.flashsale: INFO
+    org.hibernate.SQL: WARN
+    org.springframework.web: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%thread] %logger{36} - %msg%n"

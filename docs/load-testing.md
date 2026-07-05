@@ -22,6 +22,12 @@ Start the application:
 mvn spring-boot:run
 ```
 
+Application logs appear in the terminal running `mvn spring-boot:run`.
+
+Notice:
+
+`docker compose logs` only shows PostgreSQL and Redis logs because the Spring Boot app is not running inside Docker yet.
+
 The scripts require:
 
 - `curl`
@@ -97,6 +103,29 @@ available_after >= 0
 ```
 
 If this check fails, treat the result as a correctness bug until proven otherwise.
+
+## Application Logs
+
+During a run, the application logs one line per non-actuator request:
+
+```text
+http method=POST path=/api/checkout status=201 durationMs=42 remote=0:0:0:0:0:0:0:1 idempotencyKey=load-checkout-...
+```
+
+It also logs important domain events:
+
+```text
+productCreated productId=... sku=... priceCents=2500
+stockAdded productId=... quantity=10000 available=10000 reserved=0
+checkoutReserved orderId=... productId=... quantity=1 amountCents=2500 idempotencyKey=...
+businessError code=INSUFFICIENT_STOCK status=409 path=/api/checkout message=Not enough stock available
+```
+
+Under high load, logs are useful for learning but can slow the app and distort benchmark numbers. To disable request logs:
+
+```bash
+mvn spring-boot:run -Dspring-boot.run.arguments=--flashsale.logging.requests.enabled=false
+```
 
 ## Status Codes To Watch
 

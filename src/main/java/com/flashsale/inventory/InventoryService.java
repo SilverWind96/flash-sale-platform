@@ -2,6 +2,8 @@ package com.flashsale.inventory;
 
 import com.flashsale.catalog.CatalogService;
 import com.flashsale.common.BusinessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,8 @@ import java.util.UUID;
 
 @Service
 public class InventoryService {
+
+    private static final Logger log = LoggerFactory.getLogger(InventoryService.class);
 
     private final CatalogService catalogService;
     private final InventoryRepository inventoryRepository;
@@ -25,6 +29,11 @@ public class InventoryService {
         InventoryItem item = inventoryRepository.findById(productId)
                 .orElseGet(() -> inventoryRepository.save(new InventoryItem(productId, 0)));
         item.addStock(request.quantity());
+        log.info("stockAdded productId={} quantity={} available={} reserved={}",
+                productId,
+                request.quantity(),
+                item.available(),
+                item.reserved());
         return InventoryResponse.from(item);
     }
 

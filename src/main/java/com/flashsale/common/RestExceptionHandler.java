@@ -2,6 +2,8 @@ package com.flashsale.common;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,8 +15,15 @@ import java.net.URI;
 @RestControllerAdvice
 class RestExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
+
     @ExceptionHandler(BusinessException.class)
     ProblemDetail handleBusinessException(BusinessException exception, HttpServletRequest request) {
+        log.warn("businessError code={} status={} path={} message={}",
+                exception.code(),
+                exception.status().value(),
+                request.getRequestURI(),
+                exception.getMessage());
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(exception.status(), exception.getMessage());
         problem.setTitle(exception.code());
         problem.setType(URI.create("https://flash-sale.local/problems/" + exception.code()));

@@ -1,6 +1,8 @@
 package com.flashsale.catalog;
 
 import com.flashsale.common.BusinessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,8 @@ import java.util.UUID;
 @Service
 public class CatalogService {
 
+    private static final Logger log = LoggerFactory.getLogger(CatalogService.class);
+
     private final ProductRepository productRepository;
 
     public CatalogService(ProductRepository productRepository) {
@@ -20,7 +24,11 @@ public class CatalogService {
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request) {
         try {
-            Product product = productRepository.save(new Product(request.sku(), request.name(), request.priceCents()));
+            Product product = productRepository.saveAndFlush(new Product(request.sku(), request.name(), request.priceCents()));
+            log.info("productCreated productId={} sku={} priceCents={}",
+                    product.id(),
+                    product.sku(),
+                    product.priceCents());
             return ProductResponse.from(product);
         } catch (DataIntegrityViolationException exception) {
             throw new BusinessException("PRODUCT_SKU_ALREADY_EXISTS", HttpStatus.CONFLICT,
