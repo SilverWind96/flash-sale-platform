@@ -1,0 +1,27 @@
+### Create product
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "sku": "TICKET-001",
+  "name": "Concert Ticket",
+  "priceCents": 2500
+}
+
+### Add stock
+POST http://localhost:8080/api/products/{{productId}}/inventory/stock
+Content-Type: application/json
+
+{
+  "quantity": 500
+}
+
+### Checkout
+POST http://localhost:8080/api/checkout
+Content-Type: application/json
+Idempotency-Key: demo-key-001
+
+{
+  "productId": "{{productId}}",
+  "quantity": 1
+}
