@@ -69,3 +69,8 @@ curl -X POST http://localhost:8080/api/checkout \
 5. Build saga orchestration for order, inventory, payment, and shipment.
 6. Split selected modules into services after the modular monolith is correct.
 7. Add metrics, tracing, dashboards, and failure runbooks.
+
+## Phase Notes
+
+- [Phase 01: Foundation And First Concurrency Invariant](docs/phase-01-foundation.md)
+- [Load Testing](docs/load-testing.md)
